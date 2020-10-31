@@ -10,6 +10,9 @@ interface ISettings {
     password: string;
     client: string;
   };
+  jwtSecret: string;
+  sendgridKey: string;
+  frontendClient: string;
 }
 export const settings: ISettings = {
   environment: process.env.NODE_ENV || "development",
@@ -21,6 +24,9 @@ export const settings: ISettings = {
     password: process.env.DB_PASSWORD,
     client: process.env.DB_CLIENT,
   },
+  jwtSecret: process.env.JWT_SECRET,
+  sendgridKey: process.env.SENDGRID_API_KEY,
+  frontendClient: process.env.FRONTEND_CLiENT,
 };
 
 module.exports = {

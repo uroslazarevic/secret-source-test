@@ -4,11 +4,10 @@ import { T, UserTable } from "../types/tables";
 export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable(T.users, function (table) {
     table.increments();
-    table.string(UserTable.name).notNullable();
-    table.string(UserTable.email).notNullable();
-    table.string(UserTable.password).notNullable();
-    table.timestamp(UserTable.created_at).defaultTo(knex.fn.now());
-    table.timestamp(UserTable.updated_at).defaultTo(knex.fn.now());
+    table.timestamps(true, true);
+    table.string(UserTable.name);
+    table.string(UserTable.email);
+    table.string(UserTable.password);
   });
 }
 

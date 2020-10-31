@@ -1,49 +1,88 @@
+import { Model } from "./index";
+import * as bcrypt from "bcrypt";
+
 export interface IUser {
   id?: string;
+  /**
+   * User name
+   */
   name: string;
+  /**
+   * Email address
+   */
   email: string;
+  /**
+   * Bcrypt-ed password hash
+   */
   password: string;
-  created_at: string;
-  updated_at: string;
+  /**
+   * @type {Date}
+   */
+  created_at?: number;
+  /**
+   * @type {Date}
+   */
+  updated_at?: number;
 }
 
-export class User implements IUser {
-  id;
+export class User extends Model implements IUser {
   name;
   email;
-  email_ve;
   password;
-  created_at;
   updated_at;
   constructor(source: IUser) {
-    /**
-     * User ID
-     */
-    this.id = source.id;
+    super();
+    this.name = null;
+    this.email = null;
+    this.password = null;
 
-    /**
-     * User name
-     */
-    this.name = source.name;
+    // Safely assign values
+    this.assign(source);
+  }
 
-    /**
-     * Email address
-     */
-    this.email = source.email;
+  static generateHash = async (password) => {
+    const hash = await bcrypt.hash(password, 8);
+    return hash;
+  };
 
-    /**
-     * Bcrypt-ed password hash
-     */
-    this.password = source.password;
+  static validatePassword = async (password, hashedPassword) => {
+    const match = await bcrypt.compare(password, hashedPassword);
+    return match;
+  };
+}
 
-    /**
-     * @type {Date}
-     */
-    this.created_at = source.created_at;
+export class IUserLoginData extends Model implements Omit<IUser, "password"> {
+  id: string;
+  /**
+   * User name
+   */
+  name: string;
+  /**
+   * Email address
+   */
+  email: string;
+  /**
+   * @type {Date}
+   */
+  created_at?: number;
+  /**
+   * @type {Date}
+   */
+  updated_at?: number;
+  /**
+   * Access token used for logging in
+   */
+  access_token;
 
-    /**
-     * @type {Date}
-     */
-    this.updated_at = source.updated_at;
+  constructor(source: IUser, access_token: string) {
+    super();
+    this.id = null;
+    this.name = null;
+    this.email = null;
+    this.created_at = null;
+    this.updated_at = null;
+    this.access_token = access_token;
+    // Safely assign values
+    this.assign(source);
   }
 }
