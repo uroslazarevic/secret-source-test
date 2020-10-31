@@ -15,3 +15,9 @@ export class CustomError implements ICustomError {
     this.name = this.constructor.name;
   }
 }
+
+export class ServerError extends CustomError {
+  constructor() {
+    super("Server error", 500);
+  }
+}

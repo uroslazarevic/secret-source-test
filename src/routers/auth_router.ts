@@ -1,6 +1,6 @@
 import * as express from "express";
-const router = express.Router();
 import AuthController from "../controllers/auth_controller";
+const router = express.Router();
 
 // Controllers
 const authController = new AuthController();

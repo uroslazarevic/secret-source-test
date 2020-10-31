@@ -6,6 +6,7 @@ import * as lodash from "lodash";
 import { settings } from "./settings";
 import { db, assertDatabaseConnection } from "./../knexfile";
 import authRouter from "./routers/auth_router";
+import csvRouter from "./routers/csv_router";
 
 import { ICustomError } from "./lib/errors";
 
@@ -19,11 +20,12 @@ app.use(cors());
 
 // Routers
 app.use(authRouter);
+app.use(csvRouter);
 
 // Error handler
 app.use((error: ICustomError, req, res, next) => {
-  console.error("[Error]", error);
-  res.status(lodash.isFinite(error.code) || 500).json(error);
+  console.error("[Error middleware]:", error);
+  res.status((lodash.isFinite(error.code) && error.code) || 500).json(error);
 });
 
 app.listen(settings.port, () => {

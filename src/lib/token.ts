@@ -1,5 +1,6 @@
 import * as jwt from "jsonwebtoken";
 import { settings } from "../settings";
+import { CustomError } from "./errors";
 
 export class Token {
   static generateToken = (data, expiresIn = "24h") => {
@@ -8,6 +9,20 @@ export class Token {
   };
 
   static decodeToken = async (token) => {
-    return jwt.verify(token, settings.jwtSecret);
+    try {
+      return jwt.verify(token, settings.jwtSecret);
+    } catch (err) {
+      throw new InvalidAuthToken();
+    }
   };
+}
+
+// *********************************************
+
+class TokenError extends CustomError {}
+
+export class InvalidAuthToken extends TokenError {
+  constructor() {
+    super("You need be authenthicated to access this route", 401);
+  }
 }
