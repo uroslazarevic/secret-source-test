@@ -1,16 +1,20 @@
 export interface IUser {
-  id: string;
+  id?: string;
+  name: string;
   email: string;
   password: string;
   created_at: string;
+  updated_at: string;
 }
 
 export class User implements IUser {
   id;
+  name;
   email;
   email_ve;
   password;
   created_at;
+  updated_at;
   constructor(source: IUser) {
     /**
      * User ID
@@ -18,7 +22,12 @@ export class User implements IUser {
     this.id = source.id;
 
     /**
-     * Email address, uniquely identifies user in the system
+     * User name
+     */
+    this.name = source.name;
+
+    /**
+     * Email address
      */
     this.email = source.email;
 
@@ -31,5 +40,10 @@ export class User implements IUser {
      * @type {Date}
      */
     this.created_at = source.created_at;
+
+    /**
+     * @type {Date}
+     */
+    this.updated_at = source.updated_at;
   }
 }
