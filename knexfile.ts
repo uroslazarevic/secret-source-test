@@ -31,6 +31,9 @@ const knexSettings = {
     migrations: {
       directory: __dirname + "/src/migrations",
     },
+    seeds: {
+      directory: __dirname + "/src/seeds",
+    },
   },
 
   production: {

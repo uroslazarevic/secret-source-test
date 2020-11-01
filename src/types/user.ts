@@ -12,6 +12,10 @@ export interface IUser {
    */
   email: string;
   /**
+   * Email verified date
+   */
+  email_verified_at?: Date;
+  /**
    * Bcrypt-ed password hash
    */
   password: string;

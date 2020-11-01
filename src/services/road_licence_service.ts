@@ -1,25 +1,27 @@
-import { IUser, User } from "../types/user";
 import { T, RoadLicenceTable } from "../types/tables";
 import { db } from "../../knexfile";
 import { CustomError } from "../lib/errors";
 import { RoadLicence, IRoadLicence, IRoadLicenceCSVPayload } from "../types/road_licence";
+import { EmailService } from "../lib/email";
+
+const emailService = new EmailService();
 
 export default class RoadLicenceService {
-  async create(roadLicenceData: IRoadLicenceCSVPayload) {
+  async createOne(roadLicenceData: IRoadLicenceCSVPayload) {
     const roadLicence = new RoadLicence(roadLicenceData);
-    return db(T.road_licences).insert(roadLicence);
+    return (await db(T.road_licences).insert(roadLicence, Object.keys(RoadLicenceTable)))[0];
   }
 
   async createBulk(roadLicences: IRoadLicence[]) {
     return db(T.road_licences).insert(roadLicences);
   }
 
-  async find(data: Partial<IRoadLicence>): Promise<IRoadLicence[]> {
+  async findAll(data: Partial<IRoadLicence>): Promise<IRoadLicence[]> {
     return await db(T.road_licences).where(data).select("*");
   }
 
-  async update(expression, data: Partial<IRoadLicence>): Promise<IRoadLicence[]> {
-    return db(T.road_licences).where(expression).update(data, Object.keys(RoadLicenceTable));
+  async updateOne(expression, data: Partial<IRoadLicence>): Promise<IRoadLicence> {
+    return (await db(T.road_licences).where(expression).update(data, Object.keys(RoadLicenceTable)))[0];
   }
 
   async findOne(data): Promise<IRoadLicence> {
@@ -27,22 +29,22 @@ export default class RoadLicenceService {
   }
 
   async validateLicences() {
-    const unlicencedDrivers = await this.find({ published_at: null, licence: null });
-    return await Promise.all(
-      unlicencedDrivers.map(
-        async (record) =>
-          await this.update({ id: record.id }, { licence: `${record.email}_${Date.now()}`, published_at: new Date() })
-      )
-    );
-  }
-}
+    try {
+      const uncertifiedRecords = await this.findAll({ published_at: null, licence: null });
 
-// *********************************************
+      return await Promise.all(
+        uncertifiedRecords.map(async (record) => {
+          // Send certification email to users
+          const certifiedRecord = await this.updateOne(
+            { id: record.id },
+            { licence: `${record.email}_${Date.now()}`, published_at: new Date() }
+          );
 
-class IRoadLicenceError extends CustomError {}
-
-export class IUserEmailTakenError extends IRoadLicenceError {
-  constructor() {
-    super(`This email is already taken. Please try again.`, 401);
+          emailService.sendCertificationToUsers(certifiedRecord);
+        })
+      );
+    } catch (err) {
+      throw err;
+    }
   }
 }

@@ -1,13 +1,14 @@
 import { IUser, User } from "../types/user";
-import { T } from "../types/tables";
+import { T, UserTable } from "../types/tables";
 import { db } from "../../knexfile";
 import { CustomError } from "../lib/errors";
+import { settings } from "../settings";
 
 export default class UserService {
-  async create(userData: IUser) {
+  async createOne(userData: IUser) {
     const user = new User(userData);
     user.password = await User.generateHash(user.password);
-    return db(T.users).insert(user);
+    return (await db(T.users).insert(user, Object.keys(UserTable)))[0];
   }
 
   async findAll(data: Partial<IUser>): Promise<IUser[]> {
@@ -28,8 +29,14 @@ export class IUserEmailTakenError extends IUserError {
     super(`This email is already taken. Please try again.`, 401);
   }
 }
-export class IInvalidLoginDataError extends IUserError {
+export class InvalidLoginDataError extends IUserError {
   constructor() {
     super(`Incorrect password or email. Please try again.`, 401);
+  }
+}
+
+export class EmailNotVerified extends IUserError {
+  constructor() {
+    super(`Please verify your email first.`, 401);
   }
 }

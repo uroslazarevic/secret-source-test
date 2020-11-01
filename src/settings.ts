@@ -12,7 +12,7 @@ interface ISettings {
     client: string;
   };
   jwtSecret: string;
-  sendgridKey: string;
+  cronJobVerifyLicencesTime: string;
   frontendClient: string;
 }
 
@@ -27,7 +27,7 @@ export const settings: ISettings = {
     client: process.env.DB_CLIENT,
   },
   jwtSecret: process.env.JWT_SECRET,
-  sendgridKey: process.env.SENDGRID_API_KEY,
+  cronJobVerifyLicencesTime: process.env.CRON_JOB_VERIFY_LICENCES_TIME || "19",
   frontendClient: process.env.FRONTEND_CLiENT,
 };
 

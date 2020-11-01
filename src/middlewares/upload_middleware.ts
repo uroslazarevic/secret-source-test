@@ -26,7 +26,7 @@ export const uploadSingleFile = (req, res, next) => {
     let error = err;
     if (err instanceof multer.MulterError) {
       // A Multer error occurred when uploading.
-      error = new UploadMulterError();
+      error = new InvalidUploadFieldNameError();
     }
     return next(error);
   });
@@ -42,8 +42,8 @@ export class InvalidCSVFileError extends CustomError {
   }
 }
 
-export class UploadMulterError extends CustomError {
+export class InvalidUploadFieldNameError extends CustomError {
   constructor() {
-    super("Upload field name must be named 'file'.", 400);
+    super("Upload field must be named 'file'.", 400);
   }
 }

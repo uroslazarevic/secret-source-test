@@ -4,9 +4,9 @@ import CSVService, { CSVFileRequiredError } from "../services/csv_service";
 import { paths } from "../settings";
 import { IRoadLicenceCSVPayload, RoadLicence } from "../types/road_licence";
 import RoadLicenceService from "../services/road_licence_service";
-import { fileURLToPath } from "url";
 
 const csvService = new CSVService();
+const roadLicenceService = new RoadLicenceService();
 
 export default class CSVController {
   async upload(req, res, next) {
@@ -36,9 +36,11 @@ export default class CSVController {
     }
   }
 
-  async test(req, res, next) {
+  // NOTE: for testing purposes
+  async report(req, res, next) {
     try {
-      return res.json(new RoadLicenceService().validateLicences());
+      await roadLicenceService.validateLicences();
+      return res.status(200).json({ message: "All certification are emailed" });
     } catch (error) {
       next(error);
     }

@@ -1,5 +1,5 @@
 import { User, IUserLoginData, IUserRegisterPayload, IUserLoginPayload } from "../types/user";
-import UserService, { IInvalidLoginDataError, IUserEmailTakenError } from "../services/user_service";
+import UserService, { InvalidLoginDataError, IUserEmailTakenError } from "../services/user_service";
 import { Token } from "../lib/token";
 
 const userService = new UserService();
@@ -12,8 +12,8 @@ export default class AuthController {
       if (userExists) {
         throw new IUserEmailTakenError();
       }
-      const user = await userService.create(userData);
-      return res.status(200).json(user);
+      const user = await userService.createOne(userData);
+      return res.status(201).json({ message: "Signup successfull!", user });
     } catch (err) {
       next(err);
     }
@@ -25,12 +25,12 @@ export default class AuthController {
       const user = await userService.findOne({ email });
       if (!user) {
         // User doesn't exists
-        throw new IInvalidLoginDataError();
+        throw new InvalidLoginDataError();
       }
       const isMatch = User.validatePassword(password, user.password);
       if (!isMatch) {
         // User doesn't exists
-        throw new IInvalidLoginDataError();
+        throw new InvalidLoginDataError();
       }
 
       const auth_token = Token.generateToken(user, "24h");

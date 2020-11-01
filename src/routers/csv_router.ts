@@ -8,6 +8,7 @@ const csvController = new CSVController();
 
 // Routes
 router.post("/csv/upload", [authMiddlewares.checkAuth, uploadMiddleware.uploadSingleFile], csvController.upload);
-router.post("/csv/test", [authMiddlewares.checkAuth, uploadMiddleware.uploadSingleFile], csvController.test);
+// NOTE: for testing purposes
+router.post("/csv/report", [authMiddlewares.checkAuth, uploadMiddleware.uploadSingleFile], csvController.report);
 
 export default router;

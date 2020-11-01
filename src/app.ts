@@ -9,9 +9,11 @@ import authRouter from "./routers/auth_router";
 import csvRouter from "./routers/csv_router";
 
 import { ICustomError } from "./lib/errors";
+import { CronJob } from "./lib/cron_job";
 
 assertDatabaseConnection(db);
 
+const cronJob = new CronJob();
 const app = express();
 
 app.use(bodyParser.json());
@@ -29,5 +31,7 @@ app.use((error: ICustomError, req, res, next) => {
 });
 
 app.listen(settings.port, () => {
+  // Initialize cron job
+  cronJob.reportLicencedDrivers();
   console.log(`Server listening on port: ${settings.port}`);
 });
