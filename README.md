@@ -13,7 +13,7 @@ create .env file from .env.example
 ## Database
 
 1. Create database: `npm run knex migrate:latest`
-2. Create a new migration `run: npm run knex migrate:make -- migration_name`
+2. Create a new migration `npm run knex migrate:make -- migration_name`
 3. Migrate up: `npm run knex migrate:up`
 4. Migrate down: `npm run knex migrate:down`
 5. Run specific migration: `npm run knex migrate:up migration_name.ts`

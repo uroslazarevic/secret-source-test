@@ -18,18 +18,17 @@ export interface IUser {
   /**
    * @type {Date}
    */
-  created_at?: number;
+  created_at?: Date;
   /**
    * @type {Date}
    */
-  updated_at?: number;
+  updated_at?: Date;
 }
 
 export class User extends Model implements IUser {
   name;
   email;
   password;
-  updated_at;
   constructor(source: IUser) {
     super();
     this.name = null;
@@ -51,6 +50,9 @@ export class User extends Model implements IUser {
   };
 }
 
+export interface IUserRegisterPayload extends Omit<IUser, "id" | "created_at" | "updated_at"> {}
+export interface IUserLoginPayload extends Omit<IUser, "id" | "name" | "created_at" | "updated_at"> {}
+
 export class IUserLoginData extends Model implements Omit<IUser, "password"> {
   id: string;
   /**
@@ -64,11 +66,11 @@ export class IUserLoginData extends Model implements Omit<IUser, "password"> {
   /**
    * @type {Date}
    */
-  created_at?: number;
+  created_at?: Date;
   /**
    * @type {Date}
    */
-  updated_at?: number;
+  updated_at?: Date;
   /**
    * Access token used for logging in
    */

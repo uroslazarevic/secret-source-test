@@ -10,8 +10,8 @@ export default class UserService {
     return db(T.users).insert(user);
   }
 
-  async findAll(): Promise<IUser[]> {
-    return db.select("*").from("users");
+  async findAll(data: Partial<IUser>): Promise<IUser[]> {
+    return db.where(data).select("*").from("users");
   }
 
   async findOne(data: Partial<IUser>): Promise<IUser> {
@@ -23,7 +23,12 @@ export default class UserService {
 
 class IUserError extends CustomError {}
 
-export class IInvalidLoginData extends IUserError {
+export class IUserEmailTakenError extends IUserError {
+  constructor() {
+    super(`This email is already taken. Please try again.`, 401);
+  }
+}
+export class IInvalidLoginDataError extends IUserError {
   constructor() {
     super(`Incorrect password or email. Please try again.`, 401);
   }

@@ -1,5 +1,5 @@
 import { IUser } from "../types/user";
-import { Token, InvalidAuthToken } from "../lib/token";
+import { Token, InvalidAuthTokenError } from "../lib/token";
 import UserService from "../services/user_service";
 import { ServerError } from "../lib/errors";
 const userService = new UserService();
@@ -8,7 +8,7 @@ export const checkAuth = async (req, res, next) => {
   try {
     const access_token = req.header("Authorization");
     if (!access_token) {
-      throw new InvalidAuthToken();
+      throw new InvalidAuthTokenError();
     }
     const tokenString = req.header("Authorization").replace("Bearer ", "");
     const userData: IUser = await Token.decodeToken(tokenString);

@@ -1,13 +1,20 @@
-import { T } from "../types/tables";
-import { db } from "../../knexfile";
+import RoadLicenceService from "../services/road_licence_service";
 import { CustomError } from "../lib/errors";
 
+const roadLicenceService = new RoadLicenceService();
+
 export default class CSVService {
-  async upload(data) {
-    return data;
+  async uploadRoadLicence(roadLicences) {
+    return await roadLicenceService.createBulk(roadLicences);
   }
 }
 
 // *********************************************
 
-class ICSVError extends CustomError {}
+class CSVError extends CustomError {}
+
+export class CSVFileRequiredError extends CSVError {
+  constructor() {
+    super("Please upload a CSV file", 400);
+  }
+}

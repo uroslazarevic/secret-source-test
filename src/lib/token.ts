@@ -12,7 +12,7 @@ export class Token {
     try {
       return jwt.verify(token, settings.jwtSecret);
     } catch (err) {
-      throw new InvalidAuthToken();
+      throw new InvalidAuthTokenError();
     }
   };
 }
@@ -21,7 +21,7 @@ export class Token {
 
 class TokenError extends CustomError {}
 
-export class InvalidAuthToken extends TokenError {
+export class InvalidAuthTokenError extends TokenError {
   constructor() {
     super("You need be authenthicated to access this route", 401);
   }

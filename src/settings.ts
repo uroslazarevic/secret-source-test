@@ -1,3 +1,4 @@
+const path = require("path");
 require("dotenv").config();
 
 interface ISettings {
@@ -14,6 +15,7 @@ interface ISettings {
   sendgridKey: string;
   frontendClient: string;
 }
+
 export const settings: ISettings = {
   environment: process.env.NODE_ENV || "development",
   port: process.env.PORT || 8000,
@@ -29,6 +31,8 @@ export const settings: ISettings = {
   frontendClient: process.env.FRONTEND_CLiENT,
 };
 
-module.exports = {
-  settings,
+const baseDir = path.join(__dirname, "../");
+export const paths = {
+  baseDir,
+  csvUploadLocation: path.join(baseDir, "/src/uploads/csv/"),
 };
