@@ -1,4 +1,4 @@
-// Update with your config settings.
+import * as knex from "knex";
 import { settings } from "./src/settings";
 
 export const assertDatabaseConnection = (database) => {
@@ -14,7 +14,7 @@ export const assertDatabaseConnection = (database) => {
     });
 };
 
-export default {
+const knexSettings = {
   development: {
     client: settings.db.client,
     connection: {
@@ -23,12 +23,16 @@ export default {
       password: settings.db.password,
       host: settings.db.host,
     },
+    useNullAsDefault: true,
     pool: {
       min: 2,
       max: 10,
     },
     migrations: {
       directory: __dirname + "/src/migrations",
+    },
+    seeds: {
+      directory: __dirname + "/src/seeds",
     },
   },
 
@@ -40,6 +44,7 @@ export default {
       password: settings.db.password,
       host: settings.db.host,
     },
+    useNullAsDefault: true,
     pool: {
       min: 2,
       max: 10,
@@ -49,3 +54,7 @@ export default {
     },
   },
 };
+
+export const db = knex(knexSettings[settings.environment]);
+// We have to export default knex settings in order migrations to work
+export default knexSettings;
