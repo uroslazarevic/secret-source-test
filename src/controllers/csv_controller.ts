@@ -29,7 +29,7 @@ export default class CSVController {
           await csvService.uploadRoadLicence(roadLicences);
           // Delete file after upload
           fs.unlinkSync(path);
-          return res.status(200).json({ message: "Successfully uploaded csv records: " + req.file.filename });
+          return res.status(200).json({ message: "Successfully uploaded csv record: " + req.file.filename });
         });
     } catch (error) {
       next(error);

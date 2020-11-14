@@ -27,7 +27,7 @@ export default class AuthController {
         // User doesn't exists
         throw new InvalidLoginDataError();
       }
-      const isMatch = User.validatePassword(password, user.password);
+      const isMatch = await User.validatePassword(password, user.password);
       if (!isMatch) {
         // User doesn't exists
         throw new InvalidLoginDataError();
